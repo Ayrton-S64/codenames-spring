@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codenames</title>
+    <link rel="stylesheet" th:href="@{/styles/style.css}">
+</head>
+
+<body>
+    <div class="container">
+        <div id="setting-left">
+            <span>Players</span>
+            <span>T</span>
+        </div>
+        <div id="setting-right">
+            <span>Rules</span>
+            <span>User</span>
+        </div>
+        <div class="team-info-container team-info-red">
+            <div class="team-info">
+
+            </div>
+        </div>
+        <div class="team-info-container team-info-blue">
+            <div class="team-info">
+
+            </div>
+        </div>
+        <div class="message-container">
+            <div class="instruction">
+                <span>Ingresa las pistas</span>
+            </div>
+        </div>
+        <div class="game-container">
+            <div hidden id="board" class="card-container">
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="suggestion-container">
+                        <span class="suggestion">ejemplo</span>
+                        <span class="suggestion">ejemplo</span>
+                        <span class="suggestion">ejemplo</span>
+                    </div>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+                <div class="card"><button class="card-selector">o</button>
+                    <div class="card-value"><span>text</span></div>
+                </div>
+            </div>
+            <div class="clue-container">
+                <span id="clue"></span>
+                <input id="txtClue" type="text" placeholder="Escribe tu pista">
+                <select name="" id="">
+                    <option value="0">0</option>
+                    <option value="0">1</option>
+                    <option value="0">2</option>
+                    <option value="0">3</option>
+                    <option value="0">4</option>
+                    <option value="0">5</option>
+                    <option value="0">6</option>
+                    <option value="0">7</option>
+                    <option value="0">8</option>
+                    <option value="0">9</option>
+                    <option value="0">inf</option>
+                </select>
+                <button class="success">Enviar Pista</button>
+            </div>
+        </div>
+        <div class="log-container">
+            <div class="log">
+                <p align="center">Game Log</p>
+                <div>
+                    <ul>
+                        <li><span class="azul">Jugador 1</span> realizo accion</li>
+                        <li><span class="rojo">Jugador 2</span> realizo accion</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/scripts/index.js}"></script>
+</body>
+
+</html>

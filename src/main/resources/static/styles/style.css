@@ -1,0 +1,334 @@
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    background-color: orange;
+    background: radial-gradient(circle at 50% 50%, rgb(231, 102, 60) 0%, rgb(72, 12, 2) 100%);
+}
+
+
+a{
+    text-decoration: none;
+}
+
+.container{
+    display: grid;
+    grid-template-areas: 'lobby . user'
+                         '. message .'
+                         'rojo game azul'
+                         '. game log';
+    grid-template-rows: 40px 70px 340px 1fr;
+    grid-template-columns: 320px 1fr 320px;
+    /* background-color: orange; */
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow-y: auto;
+    padding: 20px 70px;
+}
+
+#setting-left{
+    background-color: #56a2f4;
+    grid-area: lobby;
+}
+#setting-right{
+    background-color: #bcb381;
+    grid-area: user;
+}
+.message-container{
+    grid-area: message;
+    display: grid;
+    place-content: center;
+    font-size: 18px;
+    font-weight: bolder;
+    color: black;
+}
+.instruction{
+    padding: 6px 8px;
+    background-color: white;
+    border-radius: 5px;
+    min-height: fit-content;
+    min-height: fit-content;
+}
+.team-info-container{
+    padding: 5px 1em;
+    flex-grow: 1;
+    /* border: 1px solid black; */
+}
+.team-info{
+    background-color: var(--team-bg-color);
+    border: 1px var(--team-border-color) solid;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    box-shadow: 0px 3px 0px #2020206e;
+}
+.team-info-red{
+    grid-area: rojo;
+    display: flex;
+    --team-bg-color: var(--bg-red-team);
+    --team-border-color: #781414;
+    /* background-color: red; */
+}
+.team-info-blue{
+    grid-area: azul;
+    display: flex;
+    --team-bg-color: var(--bg-blue-team);
+    --team-border-color: #236170;
+    /* background-color    : blue; */
+}
+.log-container{
+    grid-area: log;
+    display: flex;
+    /* background-color: #607070; */
+    padding: 5px 1em;
+}
+.game-container{
+    grid-area: game;
+    display: flex;
+    /* background-color: #80784c; */
+    display: flex;
+    flex-direction: column;
+}
+.card-container{
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(5,1fr);
+    grid-template-rows: repeat(5,1fr);
+    gap: 10px;
+    font-size: 12px;
+    padding: 1em;
+    height: calc(100% - 80px) ;
+    font-weight: bolder;
+}
+.clue-container{
+    display: flex;
+    display: center;
+    justify-content: center;
+    gap: 4px;
+    height: 80px;
+}
+
+.clue-container * {
+    height: 40px;
+}
+
+@keyframes identifier {
+    
+}
+
+.card{
+    background-color: var(--neutral-card);
+    position: relative;
+    border-radius: 13px;
+    /* height: 160px;  */
+    cursor: pointer;
+    display: flex;
+    pad: 8px;
+    --container-padding: 12px;
+    flex-direction: column-reverse;
+    padding: var(--container-padding);
+    border: 4px #80784c solid;
+    box-shadow: 0px 3px 0px #2020206e;
+}
+
+.card[data-color="rojo"]{
+    background-color: var(--red-card);
+    border: 4px #781414 solid;
+}
+
+.card[data-color="negro"]{
+    background-color: var(--black-card);
+    border: 4px #222222 solid;
+}
+
+.card[data-color="azul"]{
+    background-color: var(--blue-card);
+    border: 4px #236170 solid;
+}
+
+.suggestion-container{
+    position: absolute;
+    top: var(--container-padding);
+    width: calc(100% - var(--container-padding) / 2) ;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.suggestion-container .suggestion{
+    background-color: var(--team-bg-color);         
+    box-shadow: inset 0px 0px 0px 15px #90909020;
+    /* background-color: #606060; */
+    filter: brightness(.2);
+    /* background-blend-mode: color-burn; */
+    padding: 3px 5px;
+}
+
+.card-value{
+    width: 100%;
+    background-color: white;
+    letter-spacing: .2rem;
+    height: 2rem;
+    text-align: center;
+    display: grid;
+    align-content: center;
+    font-size: 1.2em;
+    font-weight: bolder;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+.card-selector{
+    position:absolute;
+    top: 0;
+    right: 0;
+    width: 2.5em;
+    height: 2.5em;
+    background-color: #edcf09;
+    color: white;
+    border: 2px black solid;
+    border-radius: 50%;
+    transform: translate(30%,-30%);
+    z-index: 999;
+    cursor: pointer;
+}
+
+
+.log{
+    background-color: #eaeaea8e;
+    height: 100%;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0px 3px 0px #2020206e;
+}
+
+
+.menu{
+    font-size: 24px;
+    /* justify-self: center; */
+    background-color: #D2D3D4;
+    height: 100%;
+    margin-inline: auto;
+    min-width: fit-content;
+    width: 370px;
+    border-radius: 7px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4em;
+    padding: 1em;
+}
+
+.menu .buttons{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.menu button, .menu .btn{
+    font-size: .7em;
+    font-weight: bold;
+}
+
+:root{
+    --primary-bg: #f1dd01;
+    --secondary-bg: #ae0071;
+    --success-bg: #1aae00;
+
+    --red-card: #ff4c00;
+    --blue-card: #4da8ff;
+    --neutral-card: #f5e8b3;
+    --black-card: #332f2f;
+
+    --bg-red-team: #8f2b1c;
+    --bg-blue-team: #3284a3;
+    --text-red-light: #e65831;
+    --text-blue-light: #7bcae9;    
+}
+
+.btn.primary,button.primary{
+    --button-bg: var(--primary-bg);
+    color: black;
+}
+
+.btn.secondary,button.secondary{
+    --button-bg: var(--secondary-bg);
+    color: black;
+}
+
+.btn.success,button.success{
+    --button-bg: var(--success-bg);
+    color: black;
+}
+
+
+.btn, button{
+    display: grid;
+    place-content: center;
+    background-color: var(--button-bg);
+    /* border: 4px var(--button-border) outset; */
+    border-radius: 14px;
+    padding: 7px 12px;
+    font-weight: bolder;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    vertical-align: center;
+    box-shadow: 0px 3px 0px #2020206e;
+}
+
+.btn:hover,button:hover{
+    filter: brightness(.7);
+}
+
+.log .azul{
+    color: var(--text-blue-light);
+    font-weight: bolder;
+}
+
+.log .rojo{
+    color: var(--text-red-light);
+    font-weight: bolder;
+}
+
+.menu ul{
+    padding-left: 0.5em;
+}
+
+.menu li{
+    list-style-type: none;
+    margin-left: 0px;
+}
+
+.log p{
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.log ul{
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.log li{
+    list-style-type: none;
+}
+
+input{
+    outline: none;
+    border: none;
+    border-radius: 7px;
+    box-shadow: 0px 3px 0px #2020206e;
+}
+
+select{
+    border: none;
+    border-radius: 7px;
+    box-shadow: 0px 3px 0px #2020206e;
+}
