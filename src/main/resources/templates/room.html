@@ -67,7 +67,7 @@
                         <button class="primary">Ranzomizar equipos</button>
                         <button class="primary">Resetear Equipos</button>
                         <!-- <button class="success" align="center">Empezar Partida</button> -->
-                        <a th:href="@{/game}"  class="btn success" align="center">Empezar Partida</a>
+                        <a th:href="@{/lobby/{id}/game(id=${gameId})}"  class="btn success" align="center">Empezar Partida</a>
                 </div>
             </div>
         </div>
