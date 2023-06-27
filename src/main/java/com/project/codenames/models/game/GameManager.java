@@ -46,9 +46,10 @@ public class GameManager {
             if (i_game.getId().equals(gameId)){
                 t_game=i_game;
                 t_game.getPlayers().add(t_player);
+                System.out.println("Player "+t_player+"("+t_player.getId()+") connectado a la sala: "+gameId);
             }
         }
-        System.out.println("found: "+((t_game!=null)?"SI":"NO"));
+        System.out.println("Game ID: "+gameId+" not found");
         return t_game;
     }
 
@@ -80,7 +81,7 @@ public class GameManager {
         }
         return t_game;
     }
-    public boolean disconnectPlayer(String gameId, Long playerId){
+    public boolean disconnectPlayer(String gameId, String playerId){
         return false;
     }
 

@@ -32,15 +32,18 @@ public class IndexController {
             return "redirect:/";
         }
         model.addAttribute("gameId", gameid);
+        model.addAttribute("game",game);
         return "room";
     }
 
     @GetMapping({"/lobby/{gameid}/game","/lobby/{gameid}/game"})
-    public String game(@PathVariable String gameid){
+    public String game(@PathVariable String gameid, Model model){
         Game game = gameManager.joinGame(gameid);
         if(game==null){
             return "redirect:/";
         }
+        model.addAttribute("gameId", gameid);
+        model.addAttribute("game",game);
         return "board";
     }
 }

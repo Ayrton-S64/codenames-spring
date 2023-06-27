@@ -12,12 +12,39 @@
 <body>
     <div class="container">
         <div id="setting-left">
-            <span>Players</span>
-            <span>T</span>
+            <button class="primary" style="display: inline-block;">Players <span id="numPlayers">2</span></button>
+            <div id="setting-left-modal">
+                <div>
+                    <p>Invita jugadores con este enlace</p>
+                    <input type="text" value="http://127.0.0.1:5500/room.html">
+                    <button>Copiar enlace</button>
+                </div>
+                <div>
+                    <p>Jugadores en la sala:</p>
+                    <div>
+                        <span>Jugador 1</span>
+                        <span>Jugador 2</span>
+                        <span>Jugador 3</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="primary">Reiniciar equipos</button>
+                    <button class="primary">Randomizar equipos</button>
+                </div>
+            </div>
         </div>
         <div id="setting-right">
-            <span>Rules</span>
-            <span>User</span>
+            <button class="primary" style="display: inline-block;">Username</button>
+            <div id="setting-right-modal">
+                <div>
+                    <p>Nickname</p>
+                    <input type="text" value="Jugador 1">
+                    <button class="primary">Actualizar nickname</button>
+                </div>
+                <div>
+                    <button class="primary">Abandonar sala</button>
+                </div>
+            </div>
         </div>
         <div class="team-info-container team-info-red">
             <div class="team-info">

@@ -30,12 +30,33 @@ a{
 }
 
 #setting-left{
-    background-color: #56a2f4;
+    /* background-color: #56a2f4; */
     grid-area: lobby;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
+
+#setting-left-modal{
+    background-color: #FFFFFF60;
+    position: absolute;
+    top: 100%;
+}
+
 #setting-right{
-    background-color: #bcb381;
+    /* background-color: #bcb381; */
     grid-area: user;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    position: relative;
+}
+
+#setting-right-modal{
+    background-color: #FFFFFF60;
+    position: absolute;
+    top: 100%;
+    right: 0;
 }
 .message-container{
     grid-area: message;
