@@ -96,7 +96,7 @@ public class Game {
 
     public void setClue(String clue, int numberOfCards, CardColor playerColor) {
         if (this.gameState.getActiveTeam().equals(playerColor) && !this.gameState.is_guessing()) {
-            this.clue = clue;
+            this.clue = clue.trim();
             this.amountOfCards = numberOfCards;
             this.gameState.set_guessing(true);
         }
@@ -122,7 +122,9 @@ public class Game {
             CardColor revealed =  this.board.revealCard(cardId).getColor();
             if(revealed.equals(CardColor.negro)){
                 this.gameState.setIs_gameOver(true);
-                return  (playerColor.equals(CardColor.rojo))?CardColor.azul:CardColor.rojo;
+                this.gameState.setWinner((playerColor.equals(CardColor.rojo))?CardColor.azul:CardColor.rojo);
+                this.currentTurn  = 0;
+                return this.gameState.getWinner();
             }else{
                 if(revealed.equals(playerColor)){
                     if(amountOfCards--<=0){
@@ -148,10 +150,14 @@ public class Game {
         boolean blueWin = this.board.getBlueCardsRemaining()==0;
         if(redWin){
             this.gameState.setIs_gameOver(true);
+            this.gameState.setWinner(CardColor.rojo);
+            this.currentTurn  = 0;
             return CardColor.rojo;
         }
         if(blueWin){
             this.gameState.setIs_gameOver(true);
+            this.gameState.setWinner(CardColor.azul);
+            this.currentTurn  = 0;
             return CardColor.azul;
         }
         return null;

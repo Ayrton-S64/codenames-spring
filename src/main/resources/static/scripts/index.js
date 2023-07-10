@@ -10,6 +10,8 @@ const clueAmount = document.querySelector('#clue-amount')
 const gameId = document.body.dataset.gameid;
 const userId = document.body.dataset.userid;
 
+var are_guessing = false;
+
 function setConnected(connected) {
   console.log('setConnected  =:>',  connected)
 }
@@ -24,6 +26,7 @@ function connect() {
     stompClient.subscribe(`/topic/${gameId}`, function (gameResponse) {
       gameJSON = JSON.parse(gameResponse.body);
       console.log(gameJSON)
+      are_guessing = gameJSON.gameState._guessing;
       refreshPlayerList(gameJSON.players);
       refreshTeams(gameJSON.players);
       refreshBoard(gameJSON.board.cards);
@@ -34,10 +37,16 @@ function connect() {
       gameJSON = JSON.parse(gameResponse.body);
       console.log(gameJSON);
       document.body.dataset.activeteam =  gameJSON.gameState.activeTeam;
+      are_guessing = gameJSON.gameState._guessing
       document.querySelector('.team-info-red .score-counter').textContent=gameJSON.board.redCardsRemaining
       document.querySelector('.team-info-blue .score-counter').textContent=gameJSON.board.blueCardsRemaining
       refreshBoard(gameJSON.board.cards);
       setClues(gameJSON.clue, gameJSON.amountOfCards, gameJSON.gameState._guessing, gameJSON.gameState.activeTeam);
+
+      if(gameJSON.gameState.is_gameOver){
+        alert(`${gameJSON.gameState.winner} gana la partida!`);
+        showView('menu')
+      }
     });
 
 
@@ -134,34 +143,6 @@ const mensajes = {
   }
 }
 
-var cartas = JSON.parse("[{\"word\":\"GUILLOTINA\",\"color\":\"azul\",\"index\":0,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"RIFLE\",\"color\":\"blanco\",\"index\":1,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"HOJA\",\"color\":\"azul\",\"index\":2,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"FOCO\",\"color\":\"rojo\",\"index\":3,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"MOCHILA\",\"color\":\"blanco\",\"index\":4,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"BALA\",\"color\":\"azul\",\"index\":5,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"RED\",\"color\":\"rojo\",\"index\":6,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"NUBE\",\"color\":\"blanco\",\"index\":7,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"VENTILADOR\",\"color\":\"blanco\",\"index\":8,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"GORRA\",\"color\":\"blanco\",\"index\":9,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"PALACIO\",\"color\":\"azul\",\"index\":10,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"IGLESIA\",\"color\":\"azul\",\"index\":11,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"RATA\",\"color\":\"rojo\",\"index\":12,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"RATON\",\"color\":\"azul\",\"index\":13,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"VASO\",\"color\":\"rojo\",\"index\":14,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"TANQUE\",\"color\":\"azul\",\"index\":15,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"CUADERNO\",\"color\":\"rojo\",\"index\":16,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"REYNA\",\"color\":\"rojo\",\"index\":17,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"CABLE\",\"color\":\"negro\",\"index\":18,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"LENTES\",\"color\":\"blanco\",\"index\":19,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"PERRO\",\"color\":\"rojo\",\"index\":20,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"INGLES\",\"color\":\"blanco\",\"index\":21,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"PROFESOR\",\"color\":\"rojo\",\"index\":22,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"ESPAÑA\",\"color\":\"azul\",\"index\":23,\"revealed\":false,\"suggestedBy\":[]},{\"word\":\"CABALLO\",\"color\":\"azul\",\"index\":24,\"revealed\":false,\"suggestedBy\":[]}]");
-
-var jugadores = [
-  {
-    playerName: 'Ayrton',
-    team: 'rojo',
-    role: 'spymaster',
-  },{
-    playerName: 'Opera',
-    team: 'rojo',
-    role: 'operador',
-  },{
-    playerName: 'Jugador 3',
-    team: 'rojo',
-    role: 'operador',
-  },{
-    playerName: 'Chrome',
-    team: 'azul',
-    role: 'spymaster',
-  },{
-    playerName: 'Jugador 5',
-    team: 'azul',
-    role: 'operador',
-  },
-]
-
-console.log(cartas);
-
 function genCardDomObject(cardObject, index) {
   let t_card = document.createElement('div');
   let t_textC = document.createElement('div');
@@ -182,7 +163,7 @@ function genCardDomObject(cardObject, index) {
   t_suggC.className = "suggestion-container";
 
 
-  if(document.body.dataset.activeteam===document.body.dataset.team){
+  if(are_guessing && document.body.dataset.activeteam===document.body.dataset.team){
     let t_cardButton = document.createElement('button');
     t_card.append(t_cardButton);
 
@@ -237,7 +218,10 @@ function setClues(clue, number, guessing, activeTeam){
   clueElement.hidden = !guessing;
   console.log(guessing, activeTeam, document.body.dataset.team, activeTeam!=document.body.dataset.team)
   document.querySelector('#clue-input-container').hidden = (guessing)?guessing:activeTeam!=(document.body.dataset.team);
+}
 
+function refreshCluesVisibility(){
+  document.querySelector('#clue-input-container').hidden = document.body.dataset.activeteam!=(document.body.dataset.team);
 }
 
 function refreshBoard(cards) {
@@ -280,6 +264,7 @@ function refreshTeams(players){
       if(player.id  ==  userId){
         document.body.dataset.team =  player.team;
         document.body.dataset.role =  player.role;
+        refreshCluesVisibility();
       }
       const template_text = document.createElement('span');
       template_text.textContent=player.name;

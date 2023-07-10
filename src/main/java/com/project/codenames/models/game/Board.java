@@ -2,8 +2,11 @@ package com.project.codenames.models.game;
 
 import com.project.codenames.models.entity.Card;
 import com.project.codenames.models.enums.CardColor;
+import com.project.codenames.utils.WordFromFile;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 interface CheckFunction<Card>{
@@ -31,10 +34,12 @@ public class Board {
         return cards;
     }
 
-    private void genCards(){
+    private void genCards() {
+        List<String> words =  WordFromFile.getWordFromFile("default");
+        Collections.shuffle(words);
         for(int i = 0; i<25; i++){
                 Card card = new Card();
-                card.setWord("Test");
+                card.setWord(words.get(i));
                 card.setColor(CardColor.blanco);
                 cards[i] = card;
         }

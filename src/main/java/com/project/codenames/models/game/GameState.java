@@ -14,6 +14,8 @@ public class GameState {
 
     private Boolean is_gameOver;
 
+    private CardColor winner = null;
+
     public GameState(CardColor activeTeam) {
         this.activeTeam = activeTeam;
         this.is_gameOver = false;
@@ -59,5 +61,13 @@ public class GameState {
 
     public void setIs_gameOver(Boolean is_gameOver) {
         this.is_gameOver = is_gameOver;
+    }
+
+    public CardColor getWinner() {
+        return winner;
+    }
+
+    public void setWinner(CardColor winner) {
+        this.winner = winner;
     }
 }
