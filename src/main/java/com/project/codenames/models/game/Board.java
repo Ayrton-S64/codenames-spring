@@ -19,8 +19,12 @@ public class Board {
     }
 
     public Board(int first) {
+        System.out.println("Generando cartas...");
         this.genCards();
+        System.out.println(">Cartas generadas.");
+        System.out.println("Configurando cartas...");
         this.setUpBoard(first);
+        System.out.println(">Cartas Configuradas");
     }
 
     public Card[] getCards() {
@@ -31,8 +35,8 @@ public class Board {
         for(int i = 0; i<25; i++){
                 Card card = new Card();
                 card.setWord("Test");
-                card.setColor(CardColor.Neutral);
-                cards[i] = new Card();
+                card.setColor(CardColor.blanco);
+                cards[i] = card;
         }
     }
 
@@ -43,9 +47,9 @@ public class Board {
             do {
                 int selectedIndex = (int) Math.floor(Math.random()*25);
                 Card selectedCard = cards[selectedIndex];
-                if(selectedCard.getColor()==CardColor.Neutral){
+                if(selectedCard.getColor()==CardColor.blanco){
                     valid = true;
-                    selectedCard.setColor((first==0)?CardColor.Red:CardColor.Blue);
+                    selectedCard.setColor((first==0)?CardColor.rojo:CardColor.azul);
                 }
             }while (!valid);
         }
@@ -54,9 +58,9 @@ public class Board {
             do {
                 int selectedIndex = (int) Math.floor(Math.random()*25);
                 Card selectedCard = cards[selectedIndex];
-                if(selectedCard.getColor()==CardColor.Neutral){
+                if(selectedCard.getColor()==CardColor.blanco){
                     valid = true;
-                    selectedCard.setColor((first!=0)?CardColor.Red:CardColor.Blue);
+                    selectedCard.setColor((first!=0)?CardColor.rojo:CardColor.azul);
                 }
             }while (!valid);
         }
@@ -64,43 +68,47 @@ public class Board {
         do {
             int selectedIndex = (int) Math.floor(Math.random()*25);
             Card selectedCard = cards[selectedIndex];
-            if(selectedCard.getColor()==CardColor.Neutral){
+            if(selectedCard.getColor()==CardColor.blanco){
                 is_blackSet = true;
-                selectedCard.setColor(CardColor.Black);
+                selectedCard.setColor(CardColor.negro);
             }
         }while (!is_blackSet);
     }
 
     private void setUpBoard(int first){
+        System.out.println("Configurando cartas (1)...");
         for(int i=0;  i < 9; i++){
             boolean valid = false;
             do {
                 int selectedIndex = (int) Math.floor(Math.random()*25);
                 Card selectedCard = cards[selectedIndex];
-                if(selectedCard.getColor()==CardColor.Neutral){
+//                System.out.println("("+i+")  "+selectedCard.getColor().toString());
+                if(selectedCard.getColor().equals(CardColor.blanco)){
                     valid = true;
-                    selectedCard.setColor((first==0)?CardColor.Red:CardColor.Blue);
+                    selectedCard.setColor((first==0)?CardColor.rojo:CardColor.azul);
                 }
             }while (!valid);
         }
+        System.out.println("Configurando cartas (2)...");
         for(int i=0;  i < 8; i++){
             boolean valid = false;
             do {
                 int selectedIndex = (int) Math.floor(Math.random()*25);
                 Card selectedCard = cards[selectedIndex];
-                if(selectedCard.getColor()==CardColor.Neutral){
+                if(selectedCard.getColor().equals(CardColor.blanco)){
                     valid = true;
-                    selectedCard.setColor((first!=0)?CardColor.Red:CardColor.Blue);
+                    selectedCard.setColor((first!=0)?CardColor.rojo:CardColor.azul);
                 }
             }while (!valid);
         }
+        System.out.println("Configurando cartas (3)...");
         boolean is_blackSet = false;
         do {
             int selectedIndex = (int) Math.floor(Math.random()*25);
             Card selectedCard = cards[selectedIndex];
-            if(selectedCard.getColor()==CardColor.Neutral){
+            if(selectedCard.getColor().equals(CardColor.blanco)){
                 is_blackSet = true;
-                selectedCard.setColor(CardColor.Black);
+                selectedCard.setColor(CardColor.negro);
             }
         }while (!is_blackSet);
     }
@@ -115,25 +123,25 @@ public class Board {
         return count;
     }
 
-    public CardColor revealCard(int index){
-        cards[index].setRevealed(true);
-        return cards[index].getColor();
+    public void suggestCard(int index, String player){
+        cards[index].addSuggestion(player);
     }
 
-    public CardColor revealCard(@NotNull Card card){
-        card.setRevealed(true);
-        return card.getColor();
+    public Card revealCard(int index){
+        Card selected = cards[index];
+        selected.setRevealed(true);
+        return selected;
     }
 
     public int getRedCardsRemaining() {
-        return this.countCards((element -> element.getColor()== CardColor.Red && !element.getRevealed()));
+        return this.countCards((element -> element.getColor().equals(CardColor.rojo) && !element.getRevealed()));
     }
 
     public int getBlueCardsRemaining() {
-        return this.countCards((element -> element.getColor()== CardColor.Blue && !element.getRevealed()));
+        return this.countCards((element -> element.getColor().equals(CardColor.azul) && !element.getRevealed()));
     }
 
     public Boolean getIs_assassinRevealed() {
-        return this.countCards((element -> element.getColor()== CardColor.Black && element.getRevealed()))>0;
+        return this.countCards((element -> element.getColor().equals(CardColor.negro) && element.getRevealed()))>0;
     }
 }

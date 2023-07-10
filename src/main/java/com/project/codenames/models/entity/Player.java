@@ -8,6 +8,9 @@ import java.util.UUID;
 public class Player {
 
     private String id;
+
+    private String sessionId;
+
     private String name;
 
     private CardColor team;
@@ -23,6 +26,14 @@ public class Player {
 
     public String getId() {
         return id;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public void setId(String id) {

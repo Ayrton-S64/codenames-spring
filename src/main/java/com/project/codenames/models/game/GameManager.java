@@ -15,6 +15,26 @@ public class GameManager {
 
     private List<Player> players;
 
+    public Player searchPlayer(String playerId){
+        Player player = null;
+        for(Player i_Player: players){
+            if(i_Player.getId().equals(playerId)){
+                player = i_Player;
+            }
+        }
+        return player;
+    }
+
+    public Game searchGame(String gameId){
+        Game game = null;
+        for(Game i_game: games){
+            if(i_game.getId().equals(gameId)){
+                game = i_game;
+            }
+        }
+        return game;
+    }
+
     private GameManager(){
         games = new ArrayList<Game>();
         players = new ArrayList<Player>();
@@ -38,37 +58,21 @@ public class GameManager {
         return instance;
     }
 
-    public Game joinGame(String gameId){
+    public Game joinGame(String gameId, String playerId){
         Game t_game = null;
-        Player t_player = new Player("Player");
+        Player t_player = searchPlayer(playerId);
         for(Game i_game: games){
-            System.out.println("gameId: "+gameId+" i_game: "+i_game.getId());
             if (i_game.getId().equals(gameId)){
                 t_game=i_game;
                 t_game.getPlayers().add(t_player);
-                System.out.println("Player "+t_player+"("+t_player.getId()+") connectado a la sala: "+gameId);
             }
         }
-        System.out.println("Game ID: "+gameId+" not found");
         return t_game;
     }
 
-
-    public Game joinGame(String gameId, String playerId){
-        Game t_game = null;
-        Player t_player = null;
-        for(Player i_Player: players){
-            if(i_Player.getId().equals(playerId)){
-                t_player = i_Player;
-            }
-        }
-        for(Game i_game: games){
-            if (i_game.getId().equals(gameId)){
-                t_game=i_game;
-                t_game.getPlayers().add(t_player);
-            }
-        }
-        return t_game;
+    public void registerPlayer(Player player){
+        players.add(player);
+        System.out.println("added: "+player.getName());
     }
 
     public Game joinGame(String gameId, Player player){
@@ -76,7 +80,9 @@ public class GameManager {
         for(Game i_game: games){
             if (i_game.getId().equals(gameId)){
                 t_game=i_game;
-                t_game.getPlayers().add(player);
+                if(!t_game.getPlayers().contains(player)){
+                    t_game.getPlayers().add(player);
+                }
             }
         }
         return t_game;
@@ -102,17 +108,6 @@ public class GameManager {
             if (Objects.equals(i_game.getId(), gameId)){
                 t_game=i_game;
                 t_game.start();
-            }
-        }
-        return t_game;
-    }
-
-    public Game endTurn(String gameId){
-        Game t_game = null;
-        for(Game i_game: games){
-            if (Objects.equals(i_game.getId(), gameId)){
-                t_game=i_game;
-                t_game.endTurn();
             }
         }
         return t_game;

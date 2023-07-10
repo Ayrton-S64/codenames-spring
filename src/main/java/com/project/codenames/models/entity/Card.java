@@ -23,7 +23,7 @@ public class Card {
     }
 
     public CardColor getColor() {
-        return color;
+        return this.color;
     }
 
     public void setColor(CardColor color) {
@@ -42,9 +42,14 @@ public class Card {
         return suggestedBy;
     }
 
-    public List<String> addSuggestion(String playerName){
-        this.suggestedBy.add(playerName);
-        return this.suggestedBy;
+    public void addSuggestion(String playerName){
+        if(!this.revealed){
+            if(!this.suggestedBy.contains(playerName))
+                this.suggestedBy.add(playerName);
+            else{
+                this.suggestedBy.remove(playerName);
+            }
+        }
     }
 
     public void setSuggestedBy(List<String> suggestedBy) {

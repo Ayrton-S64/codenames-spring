@@ -1,11 +1,55 @@
 *{
     box-sizing: border-box;
+    /* font-family: cursive;
+    font-size: 11px; */
 }
 
 body{
+    --current-gradient: radial-gradient(circle at 50% 50%, rgb(231, 102, 60) 0%, rgb(72, 12, 2) 100%);
+    --current-background: #faa303;
+    --current-team-color: var(--red-card);
+
     margin: 0;
     background-color: orange;
-    background: radial-gradient(circle at 50% 50%, rgb(231, 102, 60) 0%, rgb(72, 12, 2) 100%);
+    background: var(--current-gradient);
+}
+
+
+
+body[data-activeteam='rojo']{
+    --current-background: #faa303;
+    --current-gradient: radial-gradient(circle at 50% 50%, rgb(231, 102, 60) 0%, rgb(72, 12, 2) 100%);
+    --current-team-color: var(--red-card);
+}
+
+body[data-activeteam='azul']{
+    --current-background: #5fa0bd;
+    --current-gradient: radial-gradient(circle at 50% 50%, rgb(60, 209, 232) 0%, rgb(2, 69, 71) 100%);
+    --current-team-color: var(--blue-card);
+}
+
+body[data-team][data-role] .team-info button{
+    display:none;
+}
+
+body[data-role] .team-info button{
+    display:none;
+}
+
+body:not([data-role='spymaster']) #clue-input-container{
+    display:none !important;
+}
+
+body:not([data-role='operador']) .card-selector{
+    display:none !important;
+}
+
+.card[data-revealed] .card-value{
+    display:none;
+ }
+
+card[data-revealed] .card-selector{
+    display:none;
 }
 
 
@@ -38,9 +82,10 @@ a{
 }
 
 #setting-left-modal{
-    background-color: #FFFFFF60;
+    background-color: #ffffff;
     position: absolute;
     top: 100%;
+    width:230px;
 }
 
 #setting-right{
@@ -53,11 +98,13 @@ a{
 }
 
 #setting-right-modal{
-    background-color: #FFFFFF60;
+    background-color: #e4e0e0;
     position: absolute;
     top: 100%;
     right: 0;
+    width:200px;
 }
+
 .message-container{
     grid-area: message;
     display: grid;
@@ -81,11 +128,54 @@ a{
 .team-info{
     background-color: var(--team-bg-color);
     border: 1px var(--team-border-color) solid;
+    padding: 13px 10px;
     width: 100%;
     height: 100%;
     border-radius: 12px;
     box-shadow: 0px 3px 0px #2020206e;
+    display: grid;
+    grid-template-rows: 1fr 90px 90px;
 }
+
+.team-info  .score-counter{
+    font-size: 72px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    color: white;
+    align-self: center;
+    padding-inline: 22px;
+}
+
+.team-info-blue  .score-counter{
+    text-align: left;
+}
+
+.team-info-red  .score-counter{
+    text-align: right;
+}
+
+.team-info .players{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    color: white;
+}
+
+.team-info .label{
+    margin-bottom: .3em;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.team-info-red  .label{
+    color: #f38a8a;
+}
+
+.team-info-blue  .label{
+    color:#77d9f1 ;
+}
+
 .team-info-red{
     grid-area: rojo;
     display: flex;
@@ -113,6 +203,10 @@ a{
     display: flex;
     flex-direction: column;
 }
+#game{
+    height: 100%;
+}
+
 .card-container{
     display: grid;
     position: relative;
@@ -126,7 +220,6 @@ a{
 }
 .clue-container{
     display: flex;
-    display: center;
     justify-content: center;
     gap: 4px;
     height: 80px;
@@ -136,8 +229,32 @@ a{
     height: 40px;
 }
 
+.clue-container #clue{
+    padding-top: 15px;
+    gap: 3px;
+}
+
+#clue #clue-text{
+    margin-right: 3px;
+}
+
+div#clue span {
+    background: white;
+    padding: 5px 11px;
+    font-size: 24px;
+    box-sizing: border-box;
+    border: 4px var(--current-team-color);
+    margin-top: 12px;
+    border-radius: 8px;
+}
+
+#clue-input-container > div{
+    display: flex;
+    gap: 4px;
+}
+
 @keyframes identifier {
-    
+
 }
 
 .card{
@@ -147,7 +264,6 @@ a{
     /* height: 160px;  */
     cursor: pointer;
     display: flex;
-    pad: 8px;
     --container-padding: 12px;
     flex-direction: column-reverse;
     padding: var(--container-padding);
@@ -180,7 +296,7 @@ a{
 }
 
 .suggestion-container .suggestion{
-    background-color: var(--team-bg-color);         
+    background-color: var(--team-bg-color);
     box-shadow: inset 0px 0px 0px 15px #90909020;
     /* background-color: #606060; */
     filter: brightness(.2);
@@ -270,12 +386,13 @@ a{
     --bg-red-team: #8f2b1c;
     --bg-blue-team: #3284a3;
     --text-red-light: #e65831;
-    --text-blue-light: #7bcae9;    
+    --text-blue-light: #7bcae9;
 }
 
 .btn.primary,button.primary{
     --button-bg: var(--primary-bg);
     color: black;
+    margin: 10px;
 }
 
 .btn.secondary,button.secondary{
@@ -352,4 +469,68 @@ select{
     border: none;
     border-radius: 7px;
     box-shadow: 0px 3px 0px #2020206e;
+}
+
+.oculto {
+    opacity: 0;
+
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+}
+
+.mostrar {
+    opacity: 1;
+
+    pointer-events: auto;
+    transition: opacity 0.6s ease;
+}
+
+.fondo{
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+.inputInfo{
+    border: 1px solid #b4b4b4d2;
+    text-align: center;
+    margin: 5px;
+    height: 30px;
+}
+
+.centrar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+p{
+    font-weight: bold;
+}
+
+.contenedor-principal {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.usuario-conectado {
+    margin-right: 5px;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 5px;
+    font-style: italic;
+}
+
+.usuario-conectado::before{
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgb(9, 161, 9);
+    display: inline-block;
+    margin-right: 2px;
 }

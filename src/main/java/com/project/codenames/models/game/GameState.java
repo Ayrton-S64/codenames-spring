@@ -8,14 +8,16 @@ public class GameState {
 
     private PlayerRole currRole;
 
-    private int currentTurn;
+    // true operadores adivinando
+    // false spymaster dando pista
+    private boolean b_guessing ;
 
     private Boolean is_gameOver;
 
     public GameState(CardColor activeTeam) {
         this.activeTeam = activeTeam;
-        this.currentTurn = 0;
         this.is_gameOver = false;
+        this.b_guessing = false;
     }
 
     public CardColor getActiveTeam() {
@@ -26,6 +28,14 @@ public class GameState {
         this.activeTeam = activeTeam;
     }
 
+    public void changeTeam(){
+        if(this.activeTeam.equals(CardColor.rojo)) {
+            this.activeTeam = CardColor.azul;
+        } else if (this.activeTeam.equals(CardColor.azul)) {
+            this.activeTeam = CardColor.rojo;
+        }
+    }
+
     public PlayerRole getCurrRole() {
         return currRole;
     }
@@ -34,12 +44,13 @@ public class GameState {
         this.currRole = currRole;
     }
 
-    public int getCurrentTurn() {
-        return currentTurn;
+
+    public boolean is_guessing() {
+        return b_guessing;
     }
 
-    public void setCurrentTurn(int currentTurn) {
-        this.currentTurn = currentTurn;
+    public void set_guessing(boolean b_guessing) {
+        this.b_guessing = b_guessing;
     }
 
     public Boolean getIs_gameOver() {

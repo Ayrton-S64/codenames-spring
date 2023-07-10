@@ -18,19 +18,24 @@ public class Game {
 
     private int currentTurn;
 
+    private String clue;
+
+    private int amountOfCards;
+
     private GameState gameState = null;
 
     public Game(String id) {
         this.id = id;
         this.currentTurn = 0;
         this.players =  new ArrayList<Player>();
+        this.gameState = new GameState(null);
     }
 
     public void start(){
-        this.currentTurn = 1;
         int first = (int) Math.round(Math.random());
         this.board = new Board(first);
-        this.gameState = new GameState((first==0)?CardColor.Red:CardColor.Blue);
+        this.gameState = new GameState((first==0)?CardColor.rojo:CardColor.azul);
+        this.currentTurn = 1;
     }
 
     public String getId() {
@@ -73,45 +78,82 @@ public class Game {
         this.gameState = gameState;
     }
 
-    public boolean nextTurn(){
-        if(this.gameState.getIs_gameOver()){
-            return false;
+    public String getClue() {
+        return clue;
+    }
+
+    public void setClue(String clue) {
+        this.clue = clue;
+    }
+
+    public int getAmountOfCards() {
+        return amountOfCards;
+    }
+
+    public void setAmountOfCards(int amountOfCards) {
+        this.amountOfCards = amountOfCards;
+    }
+
+    public void setClue(String clue, int numberOfCards, CardColor playerColor) {
+        if (this.gameState.getActiveTeam().equals(playerColor) && !this.gameState.is_guessing()) {
+            this.clue = clue;
+            this.amountOfCards = numberOfCards;
+            this.gameState.set_guessing(true);
         }
-        if (this.gameState.getCurrRole() == PlayerRole.Operative) {
-            this.gameState.setActiveTeam((this.gameState.getActiveTeam()==CardColor.Red)?CardColor.Blue:CardColor.Red);
-        }else{
-            this.gameState.setCurrRole(PlayerRole.Operative);
+    }
+
+    public void endGuessing(CardColor playerColor){
+        if(this.gameState.getActiveTeam().equals(playerColor) && this.gameState.is_guessing()){
+            if (this.gameState.is_guessing()) {
+                this.clue =  "";
+                this.amountOfCards = 0;
+                this.gameState.set_guessing(false);
+                this.gameState.changeTeam();
+            }
         }
-        this.currentTurn++;
-        this.updateGameState();
-        return true;
     }
 
-    public boolean endTurn(){
-        this.updateGameState();
-        return  this.nextTurn();
+    public void suggestCard(int index, String player){
+        this.board.suggestCard(index, player);
     }
 
-    public CardColor revealCard(int cardId){
-        CardColor revealed = this.revealCard(cardId);
-        this.updateGameState();
-        return revealed;
+    public CardColor revealCard(int cardId, CardColor playerColor){
+        if(this.gameState.getActiveTeam().equals(playerColor) && this.gameState.is_guessing()){
+            CardColor revealed =  this.board.revealCard(cardId).getColor();
+            if(revealed.equals(CardColor.negro)){
+                this.gameState.setIs_gameOver(true);
+                return  (playerColor.equals(CardColor.rojo))?CardColor.azul:CardColor.rojo;
+            }else{
+                if(revealed.equals(playerColor)){
+                    if(amountOfCards--<=0){
+                        this.gameState.changeTeam();
+                        this.gameState.set_guessing(false);
+                        this.clue =  "";
+                        this.amountOfCards = 0;
+                    }
+                }else{
+                    this.gameState.changeTeam();
+                    this.gameState.set_guessing(false);
+                    this.clue =  "";
+                    this.amountOfCards = 0;
+                }
+            }
+            return this.checkWinner();
+        }
+        return null;
     }
 
-    public CardColor revealCard(@NotNull Card card){
-        CardColor revealed = board.revealCard(card);
-        this.updateGameState();
-        return revealed;
-    }
-
-    public void updateGameState(){
-        boolean death = this.board.getIs_assassinRevealed();
+    public CardColor checkWinner(){
         boolean redWin = this.board.getRedCardsRemaining()==0;
         boolean blueWin = this.board.getBlueCardsRemaining()==0;
-        if(redWin || blueWin || death){
+        if(redWin){
             this.gameState.setIs_gameOver(true);
+            return CardColor.rojo;
         }
-        this.gameState.setCurrentTurn(this.currentTurn);
-        this.gameState.setActiveTeam(null);
+        if(blueWin){
+            this.gameState.setIs_gameOver(true);
+            return CardColor.azul;
+        }
+        return null;
     }
 }

@@ -8,52 +8,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Codenames</title>
     <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
 </head>
-<body>
+<body th:data-gameid="${gameId}" th:data-team="${team}" th:data-activeteam="${game.gameState.activeTeam}" th:data-userid="${userID}">
     <div class="container">
         <div id="setting-left">
-            <button class="primary" style="display: inline-block;">Players <span id="numPlayers">2</span></button>
-            <div id="setting-left-modal">
-                <div>
-                    <p>Invita jugadores con este enlace</p>
-                    <input type="text" value="http://127.0.0.1:5500/room.html">
-                    <button>Copiar enlace</button>
-                </div>
-                <div>
-                    <p>Jugadores en la sala:</p>
+            <button data-target="setting-left-modal" class="primary mostrar-info" style="display: inline-block;">Players <span id="numPlayers">2</span></button>
+            <div id="setting-left-modal" class="oculto fondo">
+                <div class="centrar">
+                    <p style="color: rgba(9, 9, 253, 0.801);">Invita jugadores con este enlace</p>
                     <div>
-                        <span>Jugador 1</span>
-                        <span>Jugador 2</span>
-                        <span>Jugador 3</span>
+                        <input type="text" value="http://127.0.0.1:5500/room.html" class="inputInfo" >
+                    </div>
+
+                    <button class="primary">Copiar enlace</button>
+                </div>
+                <hr style="margin: 0;padding: 0;">
+                <div style="background-color: #e4e0e0;">
+                    <div class="centrar">
+                        <p>Jugadores en la sala:</p>
+                    </div>
+                    <div id="playerList" class="contenedor-principal">
+                        <div th:each="player  : ${game.players}" class="usuario-conectado">
+                            <span th:text="${player.name}"></span>
+                        </div>
+                    </div>
+
+                    <div class="centrar">
+                        <button class="primary">Reiniciar equipos</button>
+                        <button class="primary">Randomizar equipos</button>
                     </div>
                 </div>
-                <div>
-                    <button class="primary">Reiniciar equipos</button>
-                    <button class="primary">Randomizar equipos</button>
-                </div>
+
             </div>
         </div>
         <div id="setting-right">
-            <button class="primary" style="display: inline-block;">Username</button>
-            <div id="setting-right-modal">
-                <div>
+            <button data-target="setting-right-modal" class="primary mostrar-info" style="display: inline-block;">Username</button>
+            <div id="setting-right-modal" class="oculto fondo">
+                <div class="centrar">
                     <p>Nickname</p>
-                    <input type="text" value="Jugador 1">
+                    <input type="text" value="Jugador 1" class="inputInfo">
                     <button class="primary">Actualizar nickname</button>
-                </div>
-                <div>
                     <button class="primary">Abandonar sala</button>
                 </div>
+
             </div>
         </div>
         <div class="team-info-container team-info-red">
             <div class="team-info">
-                
+                <div class="score-counter" th:text="${game.board?.getBlueCardsRemaining()}"></div>
+                <div class="operatives-container">
+                    <p class="label">Operadores</p>
+                    <div class="players">
+                        <span>Jugador 1</span><span>Jugador 1</span>
+                    </div>
+                    <button class="primary" onclick="seleccionarRole('rojo','operador')">Unirse como operador</button>
+                </div>
+                <div class="spymasters-container">
+                    <p class="label">Spymasters</p>
+                    <div class="players">
+                        <span>Jugador 1</span><span>Jugador 1</span>
+                    </div>
+                    <button class="primary" onclick="seleccionarRole('rojo','spymaster')">Unirse como spymaster</button>
+                </div>
             </div>
         </div>
         <div class="team-info-container team-info-blue">
             <div class="team-info">
-    
+                <div class="score-counter" th:text="${game.board?.getBlueCardsRemaining()}"></div>
+                <div class="operatives-container">
+                    <p class="label">Operadores</p>
+                    <div class="players">
+                        <span>Jugador 1</span><span>Jugador 1</span>
+                    </div>
+                    <button class="primary" onclick="seleccionarRole('azul','operador')">Unirse como operador</button>
+                </div>
+                <div class="spymasters-container">
+                    <p class="label">Spymasters</p>
+                    <div class="players">
+                        <span>Jugador 1</span><span>Jugador 1</span>
+                    </div>
+                    <button class="primary" onclick="seleccionarRole('azul','spymaster')">Unirse como spymaster</button>
+                </div>
             </div>
         </div>
         <div class="message-container">
@@ -62,7 +100,7 @@
             </div>
         </div>
         <div class="game-container">
-            <div class="menu">
+            <div th:style="${(game.getCurrentTurn()==0)?'display:flex':'display:none'}" class="menu">
                 <div class="content">
                     <p>Selecciona que paquete de palabras utilizar</p>
                     <div>
@@ -94,7 +132,41 @@
                         <button class="primary">Ranzomizar equipos</button>
                         <button class="primary">Resetear Equipos</button>
                         <!-- <button class="success" align="center">Empezar Partida</button> -->
-                        <a th:href="@{/lobby/{id}/game(id=${gameId})}"  class="btn success" align="center">Empezar Partida</a>
+                        <button onclick="iniciarPartida()" id="btnIniciarPartida"  class="btn success" align="center">Empezar Partida</button>
+                </div>
+            </div>
+            <div th:hidden="${game.getCurrentTurn()==0}" hidden id="game">
+                <div hidden id="board" class="card-container">
+                    <div th:data-color="blanco" th:each="card: ${game.board?.cards}" class="card" th:classappend="${(card.revealed)?'active':''}">
+                        <button class="card-selector">o</button>
+                        <div class="card-value">
+                            <span th:text="${card.word}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clue-container">
+                    <div hidden id="clue">
+                        <span id="clue-text" th:text="${game.clue}"></span>
+                        <span id="clue-amount" th:text="${game.amountOfCards}">></span>
+                    </div>
+                    <div id="clue-input-container">
+                        <div>
+                            <input id="txtClue" type="text" placeholder="Escribe tu pista">
+                            <select name="" id="cboCantidad">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                            <button class="success" onclick="enviarPista()">Enviar Pista</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
